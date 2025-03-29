@@ -23,12 +23,42 @@ paths:
               schema:
                 $ref: "#/components/schemas/UsuarioRespuesta"
         "400":
-          description: "Datos de entrada no válidos."
+          description: "Datos de entrada inválidos"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorResponse'
+        "409":
+          description: "Correo ya registrado"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: "Error interno del servidor"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "503":
+          description: "Servicio no disponible"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /usuarios/{id}:
     put:
       summary: "Actualizacion de datos"
       description: "Permite al usuario actualizar sus datos personales."
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -37,9 +67,27 @@ paths:
               $ref: "#/components/schemas/UsuarioActualizado"
       responses:
         "201":
-          description: "Usuario registrado exitosamente."
+          description: "Usuario actualizado exitosamente."
         "400":
-          description: "Datos de entrada no válidos."
+          description: "Datos de entrada inválidos"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: "Error interno del servidor"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "503":
+          description: "Servicio no disponible"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
     delete:
       summary: "Solicitud para eliminar la cuenta."
@@ -53,10 +101,25 @@ paths:
       responses:
         "201":
           description: "Usuario eliminado exitosamente."
-        "400":
-          description: "Datos de entrada no válidos."
+
         "404":
           description: "Usuario no encontrado."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: "Error interno del servidor"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "503":
+          description: "Servicio no disponible"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /auth/login:
     post:
@@ -77,6 +140,24 @@ paths:
                 $ref: "#/components/schemas/LoginRespuesta"
         "401":
           description: "Credenciales incorrectas."
+        "404":
+          description: "Usuario no encontrado."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: "Error interno del servidor"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "503":
+          description: "Servicio no disponible"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /auth/activar:
     post:
@@ -109,6 +190,10 @@ paths:
           description: "Correo de recuperación enviado exitosamente."
         "404":
           description: "Usuario no encontrado."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /auth/reset-password:
     post:
@@ -125,9 +210,251 @@ paths:
           description: "Contraseña restablecida exitosamente."
         "400":
           description: "Código inválido o expirado."
+
+  /reportes:
+    get:
+      operationId: getAllReportes
+      summary: Obtener todos los reportes
+      description: Retorna una lista con todos los reportes existentes en el sistema.
+      responses:
+        "200":
+          description: Lista de reportes obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReporteResponse'
+        "401":
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Prohibido (sin permisos suficientes)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      operationId: createReporte
+      summary: Crear un nuevo reporte
+      description: Crea un reporte en el sistema con los datos proporcionados.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReporteRequest'
+      responses:
+        "201":
+          description: Reporte creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReporteResponse'
+        "400":
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Prohibido (sin permisos suficientes)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "409":
+          description: Conflicto (por ejemplo, un título repetido u otra regla de negocio)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /reportes/{id}:
+      get:
+        operationId: getReporteById
+        summary: Obtener un reporte por ID
+        description: Retorna el reporte correspondiente al ID proporcionado.
+        parameters:
+          - name: id
+            in: path
+            required: true
+            description: Identificador único del reporte
+            schema:
+              type: string
+        responses:
+          "200":
+            description: Reporte encontrado exitosamente
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ReporteResponse'
+          "400":
+            description: ID inválido
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          "401":
+            description: No autorizado
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          "404":
+            description: Reporte no encontrado
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          "500":
+            description: Error interno del servidor
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+
+      patch:
+        operationId: updateReport
+        summary: Actualizar un reporte por ID
+        description: Permite actualizar campos específicos de un reporte (por ejemplo, descripción, estado, imágenes, etc.).
+        parameters:
+          - name: id
+            in: path
+            required: true
+            description: Identificador único del reporte a actualizar
+            schema:
+              type: string
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportePatchRequest'
+        responses:
+          "200":
+            description: Reporte actualizado exitosamente
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ReporteResponse'
+          "400":
+            description: Datos inválidos
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          "401":
+            description: No autorizado
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          "403":
+            description: Prohibido (sin permisos suficientes)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          "404":
+            description: Reporte no encontrado
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          "409":
+            description: Conflicto (por ejemplo, un cambio de estado no permitido)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          "500":
+            description: Error interno del servidor
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+
+      delete:
+        operationId: deleteReporte
+        summary: Eliminar un reporte por ID
+        description: Elimina el reporte identificado por el ID proporcionado.
+        parameters:
+          - name: id
+            in: path
+            required: true
+            description: Identificador único del reporte a eliminar
+            schema:
+              type: string
+        responses:
+          "204":
+            description: Reporte eliminado exitosamente
+          "400":
+            description: ID inválido
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          "401":
+            description: No autorizado
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          "403":
+            description: Prohibido (sin permisos suficientes)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          "404":
+            description: Reporte no encontrado
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          "500":
+            description: Error interno del servidor
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+
 components:
   schemas:
 
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+        message:
+          type: string
 
     UsuarioRegistro:
       type: "object"
@@ -216,10 +543,167 @@ components:
     ResetPasswordRequest:
       type: "object"
       properties:
-        correo:
-          type: "string"
         codigo:
           type: "string"
         nuevaPassword:
           type: "string"
           format: "password"
+
+
+    ReporteRequest:
+      type: object
+      required:
+        - titulo
+        - descripcion
+        - fechaCreacion
+        - ubicacion
+        - imagenes
+      properties:
+        titulo:
+          type: string
+          maxLength: 255
+          description: "Título del reporte"
+          example: "Alumbrado público dañado"
+        descripcion:
+          type: string
+          description: "Descripción del problema"
+          example: "La lámpara de la calle principal está apagada desde hace 2 días."
+        fechaCreacion:
+          type: string
+          format: date-time
+          description: "Fecha y hora en que se creó el reporte"
+          example: "2025-03-26T14:30:00Z"
+
+        ubicacion:
+          $ref: "#/components/schemas/Ubicacion"
+        imagenes:
+          type: array
+          description: "Lista de URL de imágenes asociadas al reporte"
+          minItems: 1
+          items:
+            type: string
+            format: uri
+          example:
+            - "https://mi-servidor.com/imagenes/reporte-1.jpg"
+            - "https://mi-servidor.com/imagenes/reporte-2.jpg"
+        estado:
+          type: string
+          description: "Estado inicial del reporte"
+          enum:
+            - Publicado
+            - Verificado
+            - Rechazado
+            - Resuelto
+          default: "Publicado"
+          example: "Publicado"
+        contadorImportancia:
+          type: integer
+          description: "Cantidad de veces que se marcó como importante"
+          default: 0
+          example: 5
+
+
+    ReportePatchRequest:
+      type: object
+      description: "Datos opcionales para actualizar un reporte"
+      properties:
+        titulo:
+          type: string
+          maxLength: 255
+          description: "Nuevo título del reporte"
+          example: "Título actualizado"
+        descripcion:
+          type: string
+          description: "Nueva descripción del reporte"
+          example: "Descripción actualizada"
+        fechaCreacion:
+          type: string
+          format: date-time
+          description: "Fecha y hora en que se creó el reporte"
+          example: "2025-03-26T15:00:00Z"
+        ubicacion:
+          $ref: "#/components/schemas/Ubicacion"
+        imagenes:
+          type: array
+          description: "Lista de URL de imágenes asociadas al reporte"
+          items:
+            type: string
+            format: uri
+          example:
+            - "https://mi-servidor.com/imagenes/reporte-actualizado-1.jpg"
+        estado:
+          type: string
+          description: "Estado actual del reporte"
+          enum:
+            - Publicado
+            - Verificado
+            - Rechazado
+            - Resuelto
+          example: "Verificado"
+        contadorImportancia:
+          type: integer
+          description: "Cantidad de veces que se marcó como importante"
+          example: 10
+
+
+    ReporteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "Identificador único del reporte"
+          example: "abc123"
+        titulo:
+          type: string
+          description: "Título del reporte"
+          example: "Alumbrado público dañado"
+        descripcion:
+          type: string
+          description: "Descripción detallada del problema"
+          example: "La lámpara de la calle principal está apagada desde hace 2 días."
+        fechaCreacion:
+          type: string
+          format: date-time
+          description: "Fecha y hora de creación del reporte"
+          example: "2025-03-26T14:30:00Z"
+        ubicacion:
+          $ref: "#/components/schemas/Ubicacion"
+        imagenes:
+          type: array
+          description: "Lista de URL de imágenes"
+          items:
+            type: string
+            format: uri
+          example:
+            - "https://mi-servidor.com/imagenes/reporte123-1.jpg"
+            - "https://mi-servidor.com/imagenes/reporte123-2.jpg"
+        estado:
+          type: string
+          description: "Estado actual del reporte"
+          enum:
+            - Publicado
+            - Verificado
+            - Rechazado
+            - Resuelto
+          example: "Publicado"
+        contadorImportancia:
+          type: integer
+          description: "Cantidad de veces que se marcó como importante"
+
+
+    Ubicacion:
+      type: object
+      required:
+        - latitud
+        - longitud
+      properties:
+        latitud:
+          type: number
+          format: float
+          description: "Latitud geográfica"
+          example: 4.533333
+        longitud:
+          type: number
+          format: float
+          description: "Longitud geográfica"
+          example: -75.681106
