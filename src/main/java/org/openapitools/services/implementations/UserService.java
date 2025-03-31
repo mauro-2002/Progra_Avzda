@@ -4,8 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.openapitools.dto.UserDto;
 import org.openapitools.model.User;
-import org.openapitools.model.UserRegistration;
-import org.openapitools.model.UserResponse;
+import org.openapitools.dto.UserResponse;
 
 import java.util.List;
 

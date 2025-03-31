@@ -1,4 +1,4 @@
-package co.edu.uniquindio.api.Domain;
+package org.openapitools.model;
 
 public enum StatusReporte {
     PENDIENTE,
