@@ -13,10 +13,12 @@ import java.util.List;
 public class Reporte {
     private String titulo;
     private String descripcion;
-    private Ubicacion ubicacion;
+
     private LocalDate fecha;
     private StatusReporte estado;
     private int contImportante;
+
+    private String idUsuario;
 
     private List<Comentario> comentarios;
     private List<Categoria> categorias;
