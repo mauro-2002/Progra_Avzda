@@ -9,4 +9,5 @@ import lombok.Setter;
 @Builder
 public class Categoria {
     private String nombre;
+    private String descripcion;
 }
