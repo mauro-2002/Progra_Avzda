@@ -14,14 +14,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UsuarioRegistro"
+              $ref: "#/components/schemas/UsuarioRequest"
       responses:
         "201":
           description: "Usuario registrado exitosamente."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UsuarioRespuesta"
+                $ref: "#/components/schemas/UsuarioResponse"
         "400":
           description: "Datos de entrada inválidos"
           content:
@@ -64,7 +64,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UsuarioActualizado"
+              $ref: "#/components/schemas/UsuarioUpdateRequest"
       responses:
         "201":
           description: "Usuario actualizado exitosamente."
@@ -456,7 +456,7 @@ components:
         message:
           type: string
 
-    UsuarioRegistro:
+    UsuarioRequest:
       type: "object"
       properties:
         nombre:
@@ -478,8 +478,25 @@ components:
         telefono:
           type: "string"
           example: "+573205113628"
+        rol:
+          type: "string"
+          enum:
+            -"STANDAR"
+            -"ADMIN"
+          default: "STANDAR"
+        status:
+          type: "string"
+          enum:
+            - "Registrado"
+            - "Activo"
+            - "Eliminado"
+          default: "Registrado"
+      required:
+        - correo
+        - password
 
-    UsuarioRespuesta:
+
+    UsuarioResponse:
       type: "object"
       properties:
         nombre:
@@ -488,10 +505,13 @@ components:
           type: "string"
         estado:
           type: "string"
-          enum: ["pendiente", "activo"]
+          enum:
+          - "Registrado"
+          - "Activo"
+          - "Pendiente"
 
 
-    UsuarioActualizado:
+    UsuarioUpdateRequest:
       type: "object"
       properties:
         NuevoNombre:
@@ -513,6 +533,10 @@ components:
         password:
           type: "string"
           format: "password"
+      required:
+        - "correo"
+        - "password"
+
 
     LoginRespuesta:
       type: "object"
@@ -521,7 +545,7 @@ components:
           type: "string"
           example: "eyJhbGciOiJIUzI1..."
         usuario:
-          $ref: "#/components/schemas/UsuarioRespuesta"
+          $ref: "#/components/schemas/UsuarioResponse"
 
 
     ActivarCuentaRequest:
@@ -532,6 +556,7 @@ components:
         codigo:
           type: "string"
           example: "123456"
+      required: "codigo"
 
 
     RecuperarPasswordRequest:
@@ -548,6 +573,7 @@ components:
         nuevaPassword:
           type: "string"
           format: "password"
+      required: "codigo"
 
 
     ReporteRequest:
