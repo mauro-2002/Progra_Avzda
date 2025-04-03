@@ -1,9 +1,7 @@
 package org.openapitools.dto;
 
-public record ErrorResponse (
+public record ErrorResponse(
         String error,
         String msj
-){
-
+) {
 }
-
