@@ -12,6 +12,7 @@ public record UsuarioUpdateRequest(
         @NotBlank(message = "El campo es requerido")
         String newCiudad,
         @NotBlank(message = "El campo es requerido")
-        String newDireccion
+        String newDireccion,
+        String email
 ) {
 }

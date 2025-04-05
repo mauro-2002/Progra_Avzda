@@ -16,19 +16,20 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @Table
-@Document("documentos")
+@Document("usuarios")
 public class Usuario {
 
     @Id
     private String id;
     private String nombre;
-    private String correo;
+    private String email;
     private String ciudad;
     private String direccion;
+    private String telefono;
     private String password;
     private Rol rol;
 
-    private StatusUsuario estado;
+    private StatusUsuario status;
     private Map<String, Reporte> reportes;
 
     private List<Notificacion> notificaciones;

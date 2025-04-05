@@ -66,8 +66,12 @@ paths:
             schema:
               $ref: "#/components/schemas/UsuarioUpdateRequest"
       responses:
-        "201":
-          description: "Usuario actualizado exitosamente."
+        "200":
+          description: Datos actualizados correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
         "400":
           description: "Datos de entrada inválidos"
           content:
@@ -99,9 +103,12 @@ paths:
           schema:
             type: string
       responses:
-        "201":
-          description: "Usuario eliminado exitosamente."
-
+        "200":
+          description: Solicitud enviada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
         "404":
           description: "Usuario no encontrado."
           content:
@@ -445,6 +452,14 @@ paths:
 components:
   schemas:
 
+    SuccessResponse:
+      type: object
+      required:
+        - msg
+      properties:
+        msg:
+          type: string
+
     ErrorResponse:
       type: object
       required:
@@ -462,7 +477,7 @@ components:
         nombre:
           type: "string"
           example: "Juan Pérez"
-        correo:
+        email:
           type: "string"
           format: "email"
           example: "juan.perez@email.com"
@@ -501,7 +516,7 @@ components:
       properties:
         nombre:
           type: "string"
-        correo:
+        email:
           type: "string"
         estado:
           type: "string"
@@ -522,19 +537,21 @@ components:
           type: string
         NuevaDireccion:
           type: string
+        email:
+          type: string
 
 
     LoginRequest:
       type: "object"
       properties:
-        correo:
+        email:
           type: "string"
           format: "email"
         password:
           type: "string"
           format: "password"
       required:
-        - "correo"
+        - "email"
         - "password"
 
 
@@ -551,7 +568,7 @@ components:
     ActivarCuentaRequest:
       type: "object"
       properties:
-        correo:
+        email:
           type: "string"
         codigo:
           type: "string"
@@ -562,7 +579,7 @@ components:
     RecuperarPasswordRequest:
       type: "object"
       properties:
-        correo:
+        email:
           type: "string"
 
     ResetPasswordRequest:

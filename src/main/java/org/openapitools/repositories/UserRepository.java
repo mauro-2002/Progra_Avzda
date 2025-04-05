@@ -1,26 +1,30 @@
 package org.openapitools.repositories;
 
+import org.hibernate.query.Page;
+import org.openapitools.dto.UsuarioResponse;
 import org.openapitools.model.Usuario;
+import org.openapitools.model.enums.StatusUsuario;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
+import java.awt.print.Pageable;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends MongoRepository<Usuario, String> {
 
     Optional<Usuario> findUserByEmail(String email);
 
-    @Query(value = "{ 'status': { $ne: 'DELETED' }, 'email': ?0 }")
+    @Query(value = "{ 'estado': { $ne: 'ELIMINADO' }, 'email': ?0 }")
     Optional<Usuario> findExistingUserByEmail(String email);
 
-    @Query(value = "{ 'status': { $ne: 'DELETED' }, " +
-            "  'fullName': { $regex: ?0, $options: 'i' }, " +
-            "  'email': { $regex: ?1, $options: 'i' }, " +
-            "  ?#{ [2] != null ? 'dateBirth' : '_ignore' } : ?2 }",
-            sort = "{ 'fullName': 1 }")
-    Page<Usuario> findExistingUsersByFilters(String fullName, String email, LocalDateTime dateBirth, Pageable pageable);
+    //@Query(value = "{ 'estado': { $ne: 'ELIMINADO' }, " +
+    //"  'nombre': { $regex: ?0, $options: 'i' }, " +
+    //"  'correo': { $regex: ?1, $options: 'i' } }",
+    //sort = "{ 'nombre': 1 }")
+    //Page<Usuario> findExistingUsersByFilters(String nombre, String correo, Pageable pageable);
 
-    List<UserResponse> findByStatusNot(UserStatus status);
+    List<UsuarioResponse> findByStatusNot(StatusUsuario status);
 }
