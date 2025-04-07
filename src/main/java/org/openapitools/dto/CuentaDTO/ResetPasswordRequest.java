@@ -1,4 +1,4 @@
-package org.openapitools.dto;
+package org.openapitools.dto.CuentaDTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

@@ -1,5 +1,6 @@
 package org.openapitools.model;
 
+import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
@@ -15,7 +16,9 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Comentario {
 
-    private String idReporte;
+    @Id
+    @EqualsAndHashCode.Include
+    private String id;
     private String idUsuario;
     private String descripcion;
     private LocalDateTime fechaCreacion;
