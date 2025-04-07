@@ -2,7 +2,7 @@ package org.openapitools.dto.ReporteDTO;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import org.openapitools.dto.UbicacionDto;
+import org.openapitools.dto.UbicacionDTO.UbicacionDto;
 import org.openapitools.model.enums.StatusReporte;
 
 import java.util.List;
@@ -10,7 +10,8 @@ import java.util.List;
 @Data
 public class ReportePatchRequestDto {
 
-    private int id;
+    @NotBlank
+    private String id;
 
     @Size(max = 255)
     private String titulo;

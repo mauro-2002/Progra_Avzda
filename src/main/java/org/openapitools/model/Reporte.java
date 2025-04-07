@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,11 +36,12 @@ public class Reporte {
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     private GeoJsonPoint ubicacion;
 
-    private LocalDateTime fecha;
+    @Field("fecha_reporte")
+    private LocalDateTime fechaCreacion;
     private StatusReporte estado;
     private int contImportancia;
     private ObjectId idUsuario;
-    private List<String> imageUrl;
+    private List<String> imagesUrl;
 
     @DBRef
     private List<Comentario> comentarios;

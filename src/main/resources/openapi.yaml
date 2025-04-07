@@ -348,6 +348,114 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
+  /reportes/{id}/comentarios:
+    post:
+      operationId: addComentarioToReporte
+      summary: Agregar comentario a un reporte
+      description: Permite agregar un nuevo comentario al reporte identificado por su ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador único del reporte al que se le agregará el comentario
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComentarioRequest'
+      responses:
+        "201":
+          description: Comentario agregado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComentarioResponse'
+        "400":
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Prohibido (sin permisos suficientes)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: Reporte no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      operationId: getComentariosByReporteId
+      summary: Obtener comentarios de un reporte
+      description: Retorna todos los comentarios asociados a un reporte específico.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador único del reporte
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Comentarios obtenidos exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComentarioResponse'
+        "400":
+          description: ID inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Prohibido (sin permisos suficientes)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: Reporte no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
 components:
   schemas:
     UserRegistration:
@@ -493,6 +601,7 @@ components:
           $ref: "#/components/schemas/Ubicacion"
         imagenes:
           type: array
+          minItems: 1
           description: "Lista de URL de imágenes asociadas al reporte"
           items:
             type: string
@@ -504,13 +613,14 @@ components:
           type: string
           description: "Estado inicial del reporte"
           enum:
-            - Publicado
-            - Verificado
-            - Rechazado
-            - Resuelto
-          default: "Publicado"
-          example: "Publicado"
-        contadorImportancia:
+            - PENDIENTE
+            - VIGENTE
+            - RESUELTO
+            - RECHAZADO
+            - ELIMINADO
+          default: "PENDIENTE"
+          example: "PENDIENTE"
+        contImportancia:
           type: integer
           description: "Cantidad de veces que se marcó como importante"
           default: 0
@@ -575,7 +685,7 @@ components:
           example: "2025-03-26T14:30:00Z"
         ubicacion:
           $ref: "#/components/schemas/Ubicacion"
-        imagenes:
+        imagesUrl:
           type: array
           description: "Lista de URL de imágenes"
           items:
@@ -593,10 +703,37 @@ components:
             - Rechazado
             - Resuelto
           example: "Publicado"
-        contadorImportancia:
+        contImportancia:
           type: integer
           description: "Cantidad de veces que se marcó como importante"
           example: 5
+
+    ComentarioRequest:
+      type: object
+      required:
+        - contenido
+      properties:
+        descripcion:
+          type: string
+          description: Texto del comentario
+
+    ComentarioResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identificador único del comentario
+        descripcion:
+          type: string
+          description: Texto del comentario
+        fechaCreacion:
+          type: string
+          format: date-time
+          description: Fecha y hora en la que se creó el comentario
+        autor:
+          type: string
+          description: ID del usuario que escribe el comentario
+
 
   securitySchemes:
     BearerAuth:

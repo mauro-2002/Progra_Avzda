@@ -2,12 +2,11 @@ package org.openapitools.dto.ReporteDTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.bson.types.ObjectId;
-import org.openapitools.dto.UbicacionDto;
+import org.openapitools.dto.UbicacionDTO.UbicacionDto;
 import org.openapitools.model.enums.StatusReporte;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,10 +24,16 @@ public class ReporteResponseDto {
     @NotBlank
     private String descripcion;
 
+    @NotNull
+    @NotBlank
     private String idUsuario;
-    private LocalDateTime fecha;
+
+    @NotNull
+    private LocalDateTime fechaCreacion;
+
+    @NotNull
     private UbicacionDto ubicacion;
-    private List<String> imageUrl;
+    private List<@Pattern(regexp = "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$") String> imagenes;
 
     @NotNull
     private StatusReporte estado;
