@@ -5,7 +5,6 @@ import lombok.*;
 import org.openapitools.model.enums.TipoNotificacion;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -25,5 +24,5 @@ public class Notificacion {
     private TipoNotificacion tipo;
     private String mensaje;
     private LocalDateTime fecha;
-
+    private boolean leida;
 }
