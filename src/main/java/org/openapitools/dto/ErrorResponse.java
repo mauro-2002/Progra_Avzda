@@ -1,4 +1,4 @@
-package org.openapitools.dto.CuentaDTO;
+package org.openapitools.dto;
 
 public record ErrorResponse(
         String error,
