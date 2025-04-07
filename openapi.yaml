@@ -66,8 +66,12 @@ paths:
             schema:
               $ref: "#/components/schemas/UsuarioUpdateRequest"
       responses:
-        "201":
-          description: "Usuario actualizado exitosamente."
+        "200":
+          description: Datos actualizados correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
         "400":
           description: "Datos de entrada inválidos"
           content:
@@ -99,9 +103,12 @@ paths:
           schema:
             type: string
       responses:
-        "201":
-          description: "Usuario eliminado exitosamente."
-
+        "200":
+          description: Solicitud enviada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
         "404":
           description: "Usuario no encontrado."
           content:
@@ -116,6 +123,31 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         "503":
           description: "Servicio no disponible"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /usuarios/{id}/notificaciones:
+    get:
+      summary: Obtener notificaciones de un usuario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista de notificaciones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NotificacionRespuesta"
+        "404":
+          description: "Usuario no encontrado."
           content:
             application/json:
               schema:
@@ -442,8 +474,59 @@ paths:
                 schema:
                   $ref: '#/components/schemas/ErrorResponse'
 
+  /notificaciones:
+    post:
+      summary: Generar notificacion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notificacion'
+      responses:
+        "200":
+          description: Obtiene la notificacion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /notificaciones/{id}/leer:
+    patch:
+      summary: Marcar notificación como leída
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Notificación marcada como leída
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificacionRespuesta"
+        '404':
+          description: Notificación no encontrada
+
+
 components:
   schemas:
+
+    SuccessResponse:
+      type: object
+      required:
+        - msg
+      properties:
+        msg:
+          type: string
 
     ErrorResponse:
       type: object
@@ -462,7 +545,7 @@ components:
         nombre:
           type: "string"
           example: "Juan Pérez"
-        correo:
+        email:
           type: "string"
           format: "email"
           example: "juan.perez@email.com"
@@ -501,7 +584,7 @@ components:
       properties:
         nombre:
           type: "string"
-        correo:
+        email:
           type: "string"
         estado:
           type: "string"
@@ -522,19 +605,21 @@ components:
           type: string
         NuevaDireccion:
           type: string
+        email:
+          type: string
 
 
     LoginRequest:
       type: "object"
       properties:
-        correo:
+        email:
           type: "string"
           format: "email"
         password:
           type: "string"
           format: "password"
       required:
-        - "correo"
+        - "email"
         - "password"
 
 
@@ -551,7 +636,7 @@ components:
     ActivarCuentaRequest:
       type: "object"
       properties:
-        correo:
+        email:
           type: "string"
         codigo:
           type: "string"
@@ -562,7 +647,7 @@ components:
     RecuperarPasswordRequest:
       type: "object"
       properties:
-        correo:
+        email:
           type: "string"
 
     ResetPasswordRequest:
@@ -715,6 +800,54 @@ components:
         contadorImportancia:
           type: integer
           description: "Cantidad de veces que se marcó como importante"
+
+
+    Notificacion:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "66136f7b1c9d4400012f6c01"
+        mensaje:
+          type: string
+          example: "Nuevo reporte de emergencia médica en tu zona"
+        tipo:
+          type: string
+          enum: [ REPORTE_NUEVO, COMENTARIO_NUEVO, ESTADO_REPORTE, ALERTA_IMPORTANTE ]
+          example: "REPORTE_NUEVO"
+        leida:
+          type: boolean
+          example: false
+        fecha:
+          type: string
+          format: date-time
+          example: "2025-04-02T14:30:00Z"
+        usuarioId:
+          type: string
+          example: "660a91ef2a81f0001f77a0a2"
+        reporteId:
+          type: string
+          example: "660b29f76e4027001f3a9b03"
+
+
+    NotificacionRespuesta:
+      type: object
+      properties:
+        id:
+          type: string
+        mensaje:
+          type: string
+        tipo:
+          type: string
+        leida:
+          type: boolean
+        fecha:
+          type: string
+          format: date-time
+        usuarioId:
+          type: string
+        reporteId:
+          type: string
 
 
     Ubicacion:

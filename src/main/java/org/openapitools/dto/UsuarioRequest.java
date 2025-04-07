@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import org.openapitools.model.enums.Rol;
 import org.openapitools.model.enums.StatusUsuario;
 
+
 import java.util.Objects;
 
 public record UsuarioRequest(
@@ -14,7 +15,7 @@ public record UsuarioRequest(
         String nombre,
         @NotBlank(message = "El campo es requerido")
         @Email(message = "Debe ser un email válido")
-        String correo,
+        String email,
         String ciudad,
         String direccion,
         @NotBlank(message = "El campo es requerido")
