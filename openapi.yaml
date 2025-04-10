@@ -516,6 +516,135 @@ paths:
         '404':
           description: Notificación no encontrada
 
+  /admin/login:
+    post:
+      summary: "Inicio de sesión"
+      description: "Permite a un usuario autenticarse en la plataforma."
+      requestbody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminLoginRequest'
+
+      responses:
+        '200':
+          description: 'Inicio de sesión exitoso. Bienvenido Administrador'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: "Credenciales incorrectas."
+        '404':
+          description: "Administrador no encontrado."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: "Error interno del servidor."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: "Servicio no disponible."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin/categories:
+    get:
+      summary: "Hacer una lista de las categorías."
+      responses:
+        '200':
+          description: "Lista de categorías"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categorias'
+
+    post:
+      summary: "Crear una nueva categoría"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoriaRequest'
+      responses:
+        '201':
+          description: "Categoría creada exitósamente."
+
+  /admin/categories/{id}:
+    put:
+      summary: "Editar una categoría"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoriaRequest'
+      responses:
+        '200':
+          description: "Categoría actualizada exitósamente."
+
+      delete:
+        summary: "Eliminar una categoría (Se cambia de estado a inactiva)"
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: string
+        responses:
+          '204':
+            description: "Categoría eliminada exitosamente."
+
+  /admin/reports/:
+    get:
+      summary: "Hacer una lista de todos los reportes"
+      responses:
+        '200':
+          description: "Reportes disponibles"
+
+  /admin/reports/{id}/verify:
+    post:
+      summary: "Verificar un reporte"
+      parameters:
+        - name: id
+          in: path
+          required: true
+      responses:
+        '200':
+          description: "Reporte verificado exitósamente."
+
+  /admin/reports/{id}/rejected:
+    post:
+      summary: "Rechazar un reporte con un motivo"
+      parameters:
+        - name: id
+          in: path
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: "Reporte rechazado exitósamente."
+
+
 
 components:
   schemas:
@@ -866,3 +995,37 @@ components:
           format: float
           description: "Longitud geográfica"
           example: -75.681106
+
+    AdminLoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+
+    Categorias:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        active:
+          type: boolean
+
+    CategoriaRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
