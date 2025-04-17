@@ -520,7 +520,7 @@ paths:
     post:
       summary: "Inicio de sesión"
       description: "Permite a un usuario autenticarse en la plataforma."
-      requestbody:
+      requestBody:
         required: true
         content:
           application/json:
@@ -595,7 +595,7 @@ paths:
         '200':
           description: "Categoría actualizada exitósamente."
 
-      delete:
+    delete:
         summary: "Eliminar una categoría (Se cambia de estado a inactiva)"
         parameters:
           - name: id
@@ -720,7 +720,7 @@ components:
           enum:
           - "Registrado"
           - "Activo"
-          - "Pendiente"
+          - "Eliminado"
 
 
     UsuarioUpdateRequest:
