@@ -3,7 +3,6 @@ package org.openapitools.model;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.openapitools.model.enums.StatusReporte;
-import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
@@ -29,7 +28,7 @@ public class Reporte {
 
     @EqualsAndHashCode.Include
     @Id
-    private String id;
+    private String idReporte;
     private String titulo;
     private String descripcion;
 
@@ -40,6 +39,8 @@ public class Reporte {
     private LocalDateTime fechaCreacion;
     private StatusReporte estado;
     private int contImportancia;
+
+    @DBRef
     private ObjectId idUsuario;
     private List<String> imagesUrl;
 

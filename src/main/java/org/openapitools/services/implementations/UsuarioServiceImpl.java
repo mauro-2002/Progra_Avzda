@@ -1,4 +1,4 @@
-package org.openapitools.services;
+package org.openapitools.services.implementations;
 
 import lombok.RequiredArgsConstructor;
 import org.openapitools.dto.*;
@@ -7,6 +7,8 @@ import org.openapitools.model.Usuario;
 import org.openapitools.model.enums.Rol;
 import org.openapitools.model.enums.StatusUsuario;
 import org.openapitools.repositories.UserRepository;
+import org.openapitools.services.interfaces.UsuarioService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,7 +17,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
+
     private final UserRepository userRepository;
+
+    @Qualifier("usuarioMapper")
     private final UsuarioMapper userMapper;
 
     @Override

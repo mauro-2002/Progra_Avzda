@@ -1,4 +1,4 @@
-package org.openapitools.services;
+package org.openapitools.services.interfaces;
 
 import org.openapitools.dto.*;
 
