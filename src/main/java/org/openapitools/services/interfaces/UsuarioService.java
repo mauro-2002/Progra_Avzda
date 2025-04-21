@@ -2,6 +2,8 @@ package org.openapitools.services.interfaces;
 
 import org.openapitools.dto.*;
 import org.openapitools.model.Notificacion;
+import org.openapitools.model.Usuario;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -17,10 +19,9 @@ public interface UsuarioService {
 
     List<Notificacion> getNotificacionesUsuario(Long id);
 
-
     Optional<UsuarioResponse> LogIn(LoginRequest loginRequest);
 
-    void activarUsuario(ActivarCuentaRequest activarRequest);
+    Optional<SuccessResponse> activarUsuario(Usuario usuario, ActivarCuentaRequest activarCuentaRequest);
 
     void recuperarPassword (RecuperarPasswordRequest request);
 

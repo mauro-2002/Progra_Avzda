@@ -14,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -38,11 +39,6 @@ public class UsuarioController {
     public ResponseEntity<UsuarioResponse> updateUsuario(@PathVariable Long id, @RequestBody UsuarioUpdateRequest usuario) {
 
         var response = usuarioService.updateUsuario(id, usuario);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(response.id())
-                .toUri();
         return ResponseEntity.ok().body(response);
     }
 
@@ -54,7 +50,6 @@ public class UsuarioController {
 
     @GetMapping("/usuarios/{id}/notificaciones")
     public ResponseEntity<List<Notificacion>> getUsuarioNotificaciones(@PathVariable Long id) {
-
         var response = usuarioService.getNotificacionesUsuario(id);
         return ResponseEntity.ok().body(response);
     }

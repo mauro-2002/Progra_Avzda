@@ -1,33 +1,33 @@
 package org.openapitools.services.implementations;
 
 import lombok.RequiredArgsConstructor;
+import org.openapitools.exceptions.UserAlreadyExists;
 import org.openapitools.dto.*;
 import org.openapitools.mappers.UsuarioMapper;
-
 import org.openapitools.model.Notificacion;
-
 import org.openapitools.model.Usuario;
 import org.openapitools.model.enums.Rol;
 import org.openapitools.model.enums.StatusUsuario;
 import org.openapitools.repositories.UserRepository;
+import org.openapitools.services.EmailService;
 import org.openapitools.services.interfaces.UsuarioService;
-
-
-
 import org.springframework.stereotype.Service;
-
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.List;
-
 import java.util.Optional;
-import java.util.UUID;
+
 
 @RequiredArgsConstructor
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
+    private static final SecureRandom random = new SecureRandom();
+
     private final UserRepository userRepository;
 
     private final UsuarioMapper userMapper;
+    private final EmailService emailService;
 
     @Override
     public UsuarioResponse createUsuario(UsuarioRequest usuarioRequest) {
@@ -35,23 +35,34 @@ public class UsuarioServiceImpl implements UsuarioService {
         var usuario = findUsuarioByEmail(usuarioRequest.email());
         if (usuario != null) {
             // lanza una excepcion
+            throw new UserAlreadyExists("Ya existe un usuario anclado al correo proporcionado");
         }
         //creacion del usuario
+
         usuario = userMapper.parseOf(usuarioRequest);
-        usuario.setId(UUID.randomUUID().toString());
-        usuario.setStatus(StatusUsuario.REGISTRADO);
-        usuario.setRol(Rol.STANDAR);
+        String codigo = generarCodigo();
+        usuario.setCodigoActivacion(codigo);
+        usuario.setExpiracionCodigo(LocalDateTime.now().plusMinutes(15));
 
         //Agregar el usuario a la bd
         userRepository.save(usuario);
+
+        //Envia el correo con el cogido de activacion
+        emailService.enviarCorreo(
+                        usuario.getEmail(),
+                "Activacion cuenta de usuario - Seguridad Ciudadana",
+                "Su registro a sido realizado correctamente, por" +
+                        "favor utilice el siguiente codigo para activar" +
+                        "su usuario: " + codigo + "\n"+"\n"+
+                        "Tenga en cuenta que el codigo solo es valido durante 15 minutos"
+        );
+
         return userMapper.toUserResponse(usuario);
     }
 
     @Override
-
     public UsuarioResponse updateUsuario(Long id, UsuarioUpdateRequest usuarioUpdateRequest) {
         var usuario = findUsuarioByID(id);
-
         if (usuario == null){
             // lanza una exception
             throw new NullPointerException("El usuario no existe");
@@ -66,7 +77,6 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-
     public SuccessResponse deleteUsuario(Long id) {
         var usuario = findUsuarioByID(id);
         if (usuario == null){
@@ -96,14 +106,44 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-
     public Optional<UsuarioResponse> LogIn(LoginRequest loginRequest) {
+        var user = findUsuarioByEmail(loginRequest.email());
+        if (user == null){
+            throw new NullPointerException("El usuario no existe");
+        }
+
+        if (user.getRol() == Rol.STANDAR){
+            if (user.getStatus().equals(StatusUsuario.REGISTRADO)){
+
+                if (activarUsuario(user, new ActivarCuentaRequest("")).isPresent()
+                        && user.getPassword().equals(loginRequest.password())) {
+
+                    return Optional.of(userMapper.toUserResponse(user));
+                }
+            }
+            if (user.getStatus().equals(StatusUsuario.ACTIVO)){
+
+                if (user.getPassword().equals(loginRequest.password())) {
+                    return Optional.of(userMapper.toUserResponse(user));
+                }
+            }
+        }
+        
         return Optional.empty();
     }
 
     @Override
-    public void activarUsuario(ActivarCuentaRequest activarRequest) {
+    public Optional<SuccessResponse> activarUsuario(Usuario usuario, ActivarCuentaRequest activarCuentaRequest) {
+        if (usuario.getCodigoActivacion().equals(activarCuentaRequest.codigo())
+            && LocalDateTime.now().isBefore(usuario.getExpiracionCodigo())){
 
+            usuario.setStatus(StatusUsuario.ACTIVO);
+            usuario.setCodigoActivacion(null);
+            usuario.setExpiracionCodigo(null);
+            userRepository.save(usuario);
+            return Optional.of(new SuccessResponse("El usuario fue activado correctamente"));
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -117,12 +157,20 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     private Usuario findUsuarioByEmail(String Email) {
-        return userRepository.findUserByEmail(Email).orElse(null);
+        return userRepository.findExistingUserByEmail(Email).orElse(null);
     }
-
 
     private Usuario findUsuarioByID(Long id) {
         return userRepository.findUserByID(id).orElse(null);
     }
 
+    private String generarCodigo() {
+        int tam = 6;
+        StringBuilder sb = new StringBuilder(tam);
+        for (int i = 0; i < tam; i++) {
+            int digito = random.nextInt(10); // genera un número entre 0 y 9
+            sb.append(digito);
+        }
+        return sb.toString();
+    }
 }
