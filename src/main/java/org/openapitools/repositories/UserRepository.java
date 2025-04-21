@@ -16,9 +16,6 @@ import java.util.Optional;
 public interface UserRepository extends MongoRepository<Usuario, String> {
 
     @Query(value = "{ 'estado': { $ne: 'ELIMINADO' }, 'email': ?0 }")
-    Optional<Usuario> findUserByEmail(String email);
-
-    @Query(value = "{ 'estado': { $ne: 'ELIMINADO' }, 'email': ?0 }")
     Optional<Usuario> findUserByID(Long id);
 
     @Query(value = "{ 'estado': { $ne: 'ELIMINADO' }, 'email': ?0 }")
