@@ -2,7 +2,6 @@ package org.openapitools.services.interfaces;
 
 import org.openapitools.dto.*;
 import org.openapitools.model.Notificacion;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +16,7 @@ public interface UsuarioService {
     UsuarioResponse getUsuario(Long id);
 
     List<Notificacion> getNotificacionesUsuario(Long id);
+
 
     Optional<UsuarioResponse> LogIn(LoginRequest loginRequest);
 

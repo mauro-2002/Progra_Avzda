@@ -13,9 +13,13 @@ import org.openapitools.model.Usuario;
 public interface UsuarioMapper {
 
     @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
-    @Mapping(target = "estado", constant = "REGISTRADO")
+    @Mapping(target = "status", constant = "REGISTRADO")
+    @Mapping(target = "reportes", ignore = true)
+    @Mapping(target = "notificaciones", ignore = true)
+    @Mapping(target = "preferencias", ignore = true)
     @Mapping(target = "password" , expression = "java( new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode(userDTO.password()) )")
     Usuario parseOf(UsuarioRequest userDTO);
 
+    @Mapping(source = "status", target = "estado")
     UsuarioResponse toUserResponse(Usuario user);
 }

@@ -33,7 +33,7 @@ public class ReporteResponseDto {
 
     @NotNull
     private UbicacionDto ubicacion;
-    private List<@Pattern(regexp = "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$") String> imagenes;
+    private List<@Pattern(regexp = "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$") String> imagesUrl;
 
     @NotNull
     private StatusReporte estado;

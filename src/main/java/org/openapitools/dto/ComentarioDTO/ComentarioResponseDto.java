@@ -10,10 +10,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @ToString
+@Data
 public class ComentarioResponseDto {
 
     private String id;
+    private String idUsuario;
     private String descripcion;
     private LocalDateTime fechacreacion;
-    private String idUsuario;
+
 }
