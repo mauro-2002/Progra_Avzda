@@ -1,14 +1,12 @@
 package org.openapitools.repositories;
 
-import org.hibernate.query.Page;
-import org.openapitools.dto.UsuarioResponse;
+import org.openapitools.dto.UsuarioDTO.UsuarioResponse;
 import org.openapitools.model.Usuario;
 import org.openapitools.model.enums.StatusUsuario;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 

@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Notificacion {
 
     @Id
-    private String id;
+    private Long id;
     private String idUsuario;
     private String idReporte;
     private TipoNotificacion tipo;

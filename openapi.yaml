@@ -765,8 +765,6 @@ components:
     ActivarCuentaRequest:
       type: "object"
       properties:
-        email:
-          type: "string"
         codigo:
           type: "string"
           example: "123456"
