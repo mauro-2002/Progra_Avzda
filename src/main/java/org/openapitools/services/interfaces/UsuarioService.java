@@ -1,6 +1,7 @@
 package org.openapitools.services.interfaces;
 
 import org.openapitools.dto.*;
+import org.openapitools.dto.UsuarioDTO.*;
 import org.openapitools.model.Notificacion;
 import org.openapitools.model.Usuario;
 

@@ -1,8 +1,10 @@
 package org.openapitools.services.implementations;
 
 import lombok.RequiredArgsConstructor;
+import org.openapitools.dto.UsuarioDTO.*;
 import org.openapitools.exceptions.UserAlreadyExists;
 import org.openapitools.dto.*;
+import org.openapitools.exceptions.UserNotFoundException;
 import org.openapitools.mappers.UsuarioMapper;
 import org.openapitools.model.Notificacion;
 import org.openapitools.model.Usuario;
@@ -11,6 +13,7 @@ import org.openapitools.model.enums.StatusUsuario;
 import org.openapitools.repositories.UserRepository;
 import org.openapitools.services.EmailService;
 import org.openapitools.services.interfaces.UsuarioService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -25,7 +28,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     private static final SecureRandom random = new SecureRandom();
 
     private final UserRepository userRepository;
-
+    @Qualifier("usuarioMapper")
     private final UsuarioMapper userMapper;
     private final EmailService emailService;
 
@@ -65,7 +68,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         var usuario = findUsuarioByID(id);
         if (usuario == null){
             // lanza una exception
-            throw new NullPointerException("El usuario no existe");
+            throw new UserNotFoundException("No se encontro el usuario");
         }
         usuario.setNombre(usuarioUpdateRequest.newNombre());
         usuario.setCiudad(usuarioUpdateRequest.newCiudad());
@@ -80,7 +83,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     public SuccessResponse deleteUsuario(Long id) {
         var usuario = findUsuarioByID(id);
         if (usuario == null){
-            throw new NullPointerException("El usuario no existe");
+            throw new UserNotFoundException("Usuario no encontrado");
         }
         usuario.setStatus(StatusUsuario.ELIMINADO);
         userRepository.save(usuario);
