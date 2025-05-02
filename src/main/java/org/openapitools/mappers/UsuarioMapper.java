@@ -5,7 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.openapitools.dto.UsuarioDTO.UsuarioRequest;
 import org.openapitools.dto.UsuarioDTO.UsuarioResponse;
-import org.openapitools.model.Usuario;
+import org.openapitools.model.UsuarioStandar;
 
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
@@ -17,8 +17,8 @@ public interface UsuarioMapper {
     @Mapping(target = "notificaciones", ignore = true)
     @Mapping(target = "preferencias", ignore = true)
     @Mapping(target = "password" , expression = "java( new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode(userDTO.password()) )")
-    Usuario parseOf(UsuarioRequest userDTO);
+    UsuarioStandar parseOf(UsuarioRequest userDTO);
 
 
-    UsuarioResponse toUserResponse(Usuario user);
+    UsuarioResponse toUserResponse(UsuarioStandar user);
 }

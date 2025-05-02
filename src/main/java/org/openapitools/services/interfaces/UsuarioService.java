@@ -4,6 +4,7 @@ import org.openapitools.dto.*;
 import org.openapitools.dto.UsuarioDTO.*;
 import org.openapitools.model.Notificacion;
 import org.openapitools.model.Usuario;
+import org.openapitools.model.UsuarioStandar;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,17 +13,17 @@ public interface UsuarioService {
 
     UsuarioResponse createUsuario(UsuarioRequest usuarioRequest);
 
-    UsuarioResponse updateUsuario(Long id, UsuarioUpdateRequest usuarioUpdateRequest);
+    UsuarioResponse updateUsuario(String id, UsuarioUpdateRequest usuarioUpdateRequest);
 
-    SuccessResponse deleteUsuario(Long id);
+    SuccessResponse deleteUsuario(String id);
 
-    UsuarioResponse getUsuario(Long id);
+    UsuarioResponse getUsuario(String id);
 
-    List<Notificacion> getNotificacionesUsuario(Long id);
+    List<Notificacion> getNotificacionesUsuario(String id);
 
     Optional<UsuarioResponse> LogIn(LoginRequest loginRequest);
 
-    Optional<SuccessResponse> activarUsuario(Usuario usuario, ActivarCuentaRequest activarCuentaRequest);
+    Optional<SuccessResponse> activarUsuario(UsuarioStandar usuario, ActivarCuentaRequest activarCuentaRequest);
 
     void recuperarPassword (RecuperarPasswordRequest request);
 
