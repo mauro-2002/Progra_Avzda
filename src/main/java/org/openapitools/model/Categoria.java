@@ -5,7 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+import org.springframework.data.mongodb.core.mapping.Field;
 
 
 @Document(collection = "categorias")
@@ -24,7 +24,9 @@ public class Categoria {
 
     @Indexed(unique = true)
     @EqualsAndHashCode.Include
+    @Field("NOMBRE_CATEGORIA")
     private String nombre;
 
+    @Field("DESCRIPCION")
     private String descripcion;
 }

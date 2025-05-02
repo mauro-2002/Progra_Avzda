@@ -10,9 +10,9 @@ import java.util.Optional;
 
 public interface NotificacionService {
 
-    Optional<SuccessResponse> sendNotificacion(Long idUsuario, NotificacionRequest notificacionRequest);
+    Optional<SuccessResponse> sendNotificacion(String idUsuario, NotificacionRequest notificacionRequest);
 
     Optional<NotificacionResponse> getNotificacion(NotificacionRequest notificacionRequest);
 
-    void markAsView(Long idNoti, Long idUsuario);
+    void markAsView(Long idNoti, String idUsuario);
 }

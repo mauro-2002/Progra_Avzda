@@ -10,8 +10,6 @@ import org.openapitools.model.Notificacion;
 import org.openapitools.model.Usuario;
 import org.openapitools.repositories.UserRepository;
 import org.openapitools.services.interfaces.NotificacionService;
-import org.openapitools.services.interfaces.UsuarioService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,9 +20,10 @@ public class NotificacionServiceImpl implements NotificacionService {
 
     private final NotificacionMapper notificacionMapper;
     private final UserRepository usuarioRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public Optional<SuccessResponse> sendNotificacion(Long idUsuario, NotificacionRequest notificacionRequest) {
+    public Optional<SuccessResponse> sendNotificacion(String idUsuario, NotificacionRequest notificacionRequest) {
         var noti = notificacionMapper.parseToNotificacion(notificacionRequest);
         var user = usuarioRepository.findUserByID(idUsuario);
         if (user.isEmpty()) {
@@ -32,16 +31,21 @@ public class NotificacionServiceImpl implements NotificacionService {
         }
         user.get().getNotificaciones().add(noti);
 
-        return Optional.of(new SuccessResponse("Notificacion enviada correctamente"));
+        return Optional.of(new SuccessResponse("Notificacion enviada"));
     }
 
     @Override
     public Optional<NotificacionResponse> getNotificacion(NotificacionRequest notificacionRequest) {
+        var user = userRepository.findUserByID(notificacionRequest.idUsuario());
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("No existe el usuario con el id: " + notificacionRequest.idUsuario());
+        }
+
         return Optional.empty();
     }
 
     @Override
-    public void markAsView(Long idNoti, Long idUsuario) {
+    public void markAsView(Long idNoti, String idUsuario) {
         var user = usuarioRepository.findUserByID(idUsuario);
         if (user.isEmpty()) {
             throw new UserNotFoundException("No existe el usuario con el id: " + idUsuario);

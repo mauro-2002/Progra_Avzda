@@ -7,13 +7,12 @@ import org.openapitools.dto.*;
 import org.openapitools.exceptions.UserNotFoundException;
 import org.openapitools.mappers.UsuarioMapper;
 import org.openapitools.model.Notificacion;
-import org.openapitools.model.Usuario;
+import org.openapitools.model.UsuarioStandar;
 import org.openapitools.model.enums.Rol;
 import org.openapitools.model.enums.StatusUsuario;
 import org.openapitools.repositories.UserRepository;
 import org.openapitools.services.EmailService;
 import org.openapitools.services.interfaces.UsuarioService;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -28,8 +27,9 @@ public class UsuarioServiceImpl implements UsuarioService {
     private static final SecureRandom random = new SecureRandom();
 
     private final UserRepository userRepository;
-    @Qualifier("usuarioMapper")
+
     private final UsuarioMapper userMapper;
+
     private final EmailService emailService;
 
     @Override
@@ -64,7 +64,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public UsuarioResponse updateUsuario(Long id, UsuarioUpdateRequest usuarioUpdateRequest) {
+    public UsuarioResponse updateUsuario(String id, UsuarioUpdateRequest usuarioUpdateRequest) {
         var usuario = findUsuarioByID(id);
         if (usuario == null){
             // lanza una exception
@@ -80,7 +80,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public SuccessResponse deleteUsuario(Long id) {
+    public SuccessResponse deleteUsuario(String id) {
         var usuario = findUsuarioByID(id);
         if (usuario == null){
             throw new UserNotFoundException("Usuario no encontrado");
@@ -91,19 +91,19 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public UsuarioResponse getUsuario(Long id) {
+    public UsuarioResponse getUsuario(String id) {
         var usuario = findUsuarioByID(id);
         if (usuario == null){
-            throw new NullPointerException("El usuario no existe");
+            throw new UserNotFoundException("El usuario no existe");
         }
         return userMapper.toUserResponse(usuario);
     }
 
     @Override
-    public List<Notificacion> getNotificacionesUsuario(Long id) {
+    public List<Notificacion> getNotificacionesUsuario(String id) {
         var usuario = findUsuarioByID(id);
         if (usuario == null){
-            throw new NullPointerException("El usuario no existe");
+            throw new UserNotFoundException("El usuario no existe");
         }
         return usuario.getNotificaciones();
     }
@@ -112,7 +112,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     public Optional<UsuarioResponse> LogIn(LoginRequest loginRequest) {
         var user = findUsuarioByEmail(loginRequest.email());
         if (user == null){
-            throw new NullPointerException("El usuario no existe");
+            throw new UserNotFoundException("El usuario no existe");
         }
 
         if (user.getRol() == Rol.STANDAR){
@@ -136,7 +136,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Optional<SuccessResponse> activarUsuario(Usuario usuario, ActivarCuentaRequest activarCuentaRequest) {
+    public Optional<SuccessResponse> activarUsuario(UsuarioStandar usuario, ActivarCuentaRequest activarCuentaRequest) {
         if (usuario.getCodigoActivacion().equals(activarCuentaRequest.codigo())
             && LocalDateTime.now().isBefore(usuario.getExpiracionCodigo())){
 
@@ -159,11 +159,11 @@ public class UsuarioServiceImpl implements UsuarioService {
         return Optional.empty();
     }
 
-    private Usuario findUsuarioByEmail(String Email) {
+    private UsuarioStandar findUsuarioByEmail(String Email) {
         return userRepository.findExistingUserByEmail(Email).orElse(null);
     }
 
-    private Usuario findUsuarioByID(Long id) {
+    private UsuarioStandar findUsuarioByID(String id) {
         return userRepository.findUserByID(id).orElse(null);
     }
 

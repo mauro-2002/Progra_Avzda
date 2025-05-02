@@ -4,7 +4,7 @@ import org.openapitools.model.enums.StatusUsuario;
 
 
 public record UsuarioResponse(
-        Long id,
+        String id,
         String nombre,
         String email,
         StatusUsuario status

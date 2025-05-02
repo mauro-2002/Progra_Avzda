@@ -1,10 +1,10 @@
 package org.openapitools.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
+import lombok.experimental.SuperBuilder;
 import org.openapitools.model.enums.Rol;
 import org.openapitools.model.enums.StatusUsuario;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -13,18 +13,15 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
-@Table
-@Document("usuarios")
 public class Usuario {
 
     @Id
-    private Long id;
+    private String id;
     @Field ("NOMBRE")
     private String nombre;
     @Field ("EMAIL")
@@ -34,17 +31,15 @@ public class Usuario {
     @Field("TELEFONO")
     private String telefono;
     private String password;
+    @Field ("TIPO")
     private Rol rol;
 
     @Field("ESTADO_USUARIO")
     private StatusUsuario status;
-    private String codigoActivacion;
-    private LocalDateTime expiracionCodigo;
 
     @DBRef
     private List<Reporte> reportes;
     @DBRef
     private List<Notificacion> notificaciones;
-    @DBRef
-    private List<Categoria> preferencias;
+
 }

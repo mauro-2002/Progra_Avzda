@@ -2,6 +2,7 @@ package org.openapitools.repositories;
 
 import org.openapitools.dto.UsuarioDTO.UsuarioResponse;
 import org.openapitools.model.Usuario;
+import org.openapitools.model.UsuarioStandar;
 import org.openapitools.model.enums.StatusUsuario;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -11,13 +12,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends MongoRepository<Usuario, String> {
+public interface UserRepository extends MongoRepository<UsuarioStandar, String> {
 
     @Query(value = "{ 'estado': { $ne: 'ELIMINADO' }, 'email': ?0 }")
-    Optional<Usuario> findUserByID(Long id);
+    Optional<UsuarioStandar> findUserByID(String id);
 
     @Query(value = "{ 'estado': { $ne: 'ELIMINADO' }, 'email': ?0 }")
-    Optional<Usuario> findExistingUserByEmail(String email);
+    Optional<UsuarioStandar> findExistingUserByEmail(String email);
 
     //@Query(value = "{ 'estado': { $ne: 'ELIMINADO' }, " +
     //"  'nombre': { $regex: ?0, $options: 'i' }, " +

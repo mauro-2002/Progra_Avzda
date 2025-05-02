@@ -23,6 +23,7 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
+
     @PostMapping("/usuarios")
     public ResponseEntity<UsuarioResponse> addUsuario(@Valid @RequestBody UsuarioRequest usuario) {
 
@@ -36,7 +37,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/usuarios/{id}")
-    public ResponseEntity<UsuarioResponse> updateUsuario(@PathVariable Long id,@Valid @RequestBody UsuarioUpdateRequest usuario) {
+    public ResponseEntity<UsuarioResponse> updateUsuario(@PathVariable String id,@Valid @RequestBody UsuarioUpdateRequest usuario) {
         try {
             var response = usuarioService.updateUsuario(id, usuario);
             return ResponseEntity.ok().body(response);
@@ -46,7 +47,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/usuarios/{id}")
-    public ResponseEntity<SuccessResponse> deleteUsuario(@PathVariable Long id) {
+    public ResponseEntity<SuccessResponse> deleteUsuario(@PathVariable String id) {
         try{
             var response = usuarioService.deleteUsuario(id);
             return ResponseEntity.ok().body(response);
@@ -56,8 +57,11 @@ public class UsuarioController {
     }
 
     @GetMapping("/usuarios/{id}/notificaciones")
-    public ResponseEntity<List<Notificacion>> getUsuarioNotificaciones(@PathVariable Long id) {
+    public ResponseEntity<List<Notificacion>> getUsuarioNotificaciones(@PathVariable String id) {
         var response = usuarioService.getNotificacionesUsuario(id);
         return ResponseEntity.ok().body(response);
     }
+
+
+
 }
