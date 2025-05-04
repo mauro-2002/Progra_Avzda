@@ -516,45 +516,6 @@ paths:
         '404':
           description: Notificación no encontrada
 
-  /admin/login:
-    post:
-      summary: "Inicio de sesión"
-      description: "Permite a un usuario autenticarse en la plataforma."
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AdminLoginRequest'
-
-      responses:
-        '200':
-          description: 'Inicio de sesión exitoso. Bienvenido Administrador'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthResponse'
-        '401':
-          description: "Credenciales incorrectas."
-        '404':
-          description: "Administrador no encontrado."
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: "Error interno del servidor."
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '503':
-          description: "Servicio no disponible."
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
   /admin/categories:
     get:
       summary: "Hacer una lista de las categorías."

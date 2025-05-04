@@ -7,6 +7,7 @@ import org.openapitools.dto.NotificacionDTO.NotificacionRequest;
 import org.openapitools.dto.NotificacionDTO.NotificacionResponse;
 import org.openapitools.dto.SuccessResponse;
 import org.openapitools.dto.UsuarioDTO.UsuarioResponse;
+import org.openapitools.exceptions.UserNotFoundException;
 import org.openapitools.services.interfaces.NotificacionService;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.http.ResponseEntity;
@@ -23,5 +24,15 @@ public class NotificacionController {
     public ResponseEntity<SuccessResponse> sendNotification(UsuarioResponse usuario,@Valid @RequestBody NotificacionRequest notificacion) {
         var respuesta = notificacionService.sendNotificacion(usuario.id(), notificacion);
         return respuesta.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("notificaciones/{id}/leer")
+    public ResponseEntity<SuccessResponse> markAsView (Long idNotificacion, String idUsuario) {
+        try{
+            notificacionService.markAsView(idNotificacion,idUsuario);
+        }catch (UserNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(new SuccessResponse("Notificacion Vista"));
     }
 }

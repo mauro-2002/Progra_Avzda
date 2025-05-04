@@ -1,4 +1,4 @@
-package org.openapitools.dto.UsuarioDTO;
+package org.openapitools.dto.AuthDTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

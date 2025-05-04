@@ -1,9 +1,12 @@
 package org.openapitools.services.interfaces;
 
 import org.openapitools.dto.*;
+import org.openapitools.dto.AuthDTO.ActivarCuentaRequest;
+import org.openapitools.dto.AuthDTO.LoginRequest;
+import org.openapitools.dto.AuthDTO.RecuperarPasswordRequest;
+import org.openapitools.dto.AuthDTO.ResetPasswordRequest;
 import org.openapitools.dto.UsuarioDTO.*;
 import org.openapitools.model.Notificacion;
-import org.openapitools.model.Usuario;
 import org.openapitools.model.UsuarioStandar;
 
 import java.util.List;
@@ -21,11 +24,4 @@ public interface UsuarioService {
 
     List<Notificacion> getNotificacionesUsuario(String id);
 
-    Optional<UsuarioResponse> LogIn(LoginRequest loginRequest);
-
-    Optional<SuccessResponse> activarUsuario(UsuarioStandar usuario, ActivarCuentaRequest activarCuentaRequest);
-
-    void recuperarPassword (RecuperarPasswordRequest request);
-
-    Optional<SuccessResponse> resetPassword (ResetPasswordRequest resetPasswordRequest);
 }

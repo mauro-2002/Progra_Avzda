@@ -1,6 +1,10 @@
 package org.openapitools.services.implementations;
 
 import lombok.RequiredArgsConstructor;
+import org.openapitools.dto.AuthDTO.ActivarCuentaRequest;
+import org.openapitools.dto.AuthDTO.LoginRequest;
+import org.openapitools.dto.AuthDTO.RecuperarPasswordRequest;
+import org.openapitools.dto.AuthDTO.ResetPasswordRequest;
 import org.openapitools.dto.UsuarioDTO.*;
 import org.openapitools.exceptions.UserAlreadyExists;
 import org.openapitools.dto.*;
@@ -25,11 +29,8 @@ import java.util.Optional;
 public class UsuarioServiceImpl implements UsuarioService {
 
     private static final SecureRandom random = new SecureRandom();
-
     private final UserRepository userRepository;
-
     private final UsuarioMapper userMapper;
-
     private final EmailService emailService;
 
     @Override
@@ -108,56 +109,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuario.getNotificaciones();
     }
 
-    @Override
-    public Optional<UsuarioResponse> LogIn(LoginRequest loginRequest) {
-        var user = findUsuarioByEmail(loginRequest.email());
-        if (user == null){
-            throw new UserNotFoundException("El usuario no existe");
-        }
-
-        if (user.getRol() == Rol.STANDAR){
-            if (user.getStatus().equals(StatusUsuario.REGISTRADO)){
-
-                if (activarUsuario(user, new ActivarCuentaRequest("")).isPresent()
-                        && user.getPassword().equals(loginRequest.password())) {
-
-                    return Optional.of(userMapper.toUserResponse(user));
-                }
-            }
-            if (user.getStatus().equals(StatusUsuario.ACTIVO)){
-
-                if (user.getPassword().equals(loginRequest.password())) {
-                    return Optional.of(userMapper.toUserResponse(user));
-                }
-            }
-        }
-        
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<SuccessResponse> activarUsuario(UsuarioStandar usuario, ActivarCuentaRequest activarCuentaRequest) {
-        if (usuario.getCodigoActivacion().equals(activarCuentaRequest.codigo())
-            && LocalDateTime.now().isBefore(usuario.getExpiracionCodigo())){
-
-            usuario.setStatus(StatusUsuario.ACTIVO);
-            usuario.setCodigoActivacion(null);
-            usuario.setExpiracionCodigo(null);
-            userRepository.save(usuario);
-            return Optional.of(new SuccessResponse("El usuario fue activado correctamente"));
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public void recuperarPassword(RecuperarPasswordRequest request) {
-
-    }
-
-    @Override
-    public Optional<SuccessResponse> resetPassword(ResetPasswordRequest resetPasswordRequest) {
-        return Optional.empty();
-    }
+//------------------------------------METODOS AUXILIARES ---------------------------------------//
 
     private UsuarioStandar findUsuarioByEmail(String Email) {
         return userRepository.findExistingUserByEmail(Email).orElse(null);
