@@ -1,10 +1,6 @@
 package org.openapitools.services.implementations;
 
 import lombok.RequiredArgsConstructor;
-import org.openapitools.dto.AuthDTO.ActivarCuentaRequest;
-import org.openapitools.dto.AuthDTO.LoginRequest;
-import org.openapitools.dto.AuthDTO.RecuperarPasswordRequest;
-import org.openapitools.dto.AuthDTO.ResetPasswordRequest;
 import org.openapitools.dto.UsuarioDTO.*;
 import org.openapitools.exceptions.UserAlreadyExists;
 import org.openapitools.dto.*;
@@ -12,7 +8,6 @@ import org.openapitools.exceptions.UserNotFoundException;
 import org.openapitools.mappers.UsuarioMapper;
 import org.openapitools.model.Notificacion;
 import org.openapitools.model.UsuarioStandar;
-import org.openapitools.model.enums.Rol;
 import org.openapitools.model.enums.StatusUsuario;
 import org.openapitools.repositories.UserRepository;
 import org.openapitools.services.EmailService;
@@ -21,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 
 @RequiredArgsConstructor

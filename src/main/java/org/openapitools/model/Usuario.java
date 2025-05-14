@@ -8,10 +8,8 @@ import lombok.experimental.SuperBuilder;
 import org.openapitools.model.enums.Rol;
 import org.openapitools.model.enums.StatusUsuario;
 import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter

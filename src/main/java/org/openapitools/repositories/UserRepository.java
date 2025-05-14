@@ -1,7 +1,6 @@
 package org.openapitools.repositories;
 
 import org.openapitools.dto.UsuarioDTO.UsuarioResponse;
-import org.openapitools.model.Usuario;
 import org.openapitools.model.UsuarioStandar;
 import org.openapitools.model.enums.StatusUsuario;
 import org.springframework.data.mongodb.repository.MongoRepository;
