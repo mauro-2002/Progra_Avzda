@@ -4,12 +4,10 @@ package org.openapitools.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.openapitools.dto.NotificacionDTO.NotificacionRequest;
-import org.openapitools.dto.NotificacionDTO.NotificacionResponse;
 import org.openapitools.dto.SuccessResponse;
 import org.openapitools.dto.UsuarioDTO.UsuarioResponse;
 import org.openapitools.exceptions.UserNotFoundException;
 import org.openapitools.services.interfaces.NotificacionService;
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

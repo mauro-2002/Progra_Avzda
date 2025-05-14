@@ -21,4 +21,5 @@ public class UsuarioStandar extends Usuario {
     private LocalDateTime expiracionCodigo;
     @DBRef
     private List<Categoria> preferencias;
+    private String codigoRecuperacion;
 }
