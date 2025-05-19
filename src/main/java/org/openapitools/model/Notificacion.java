@@ -18,11 +18,11 @@ import java.time.LocalDateTime;
 public class Notificacion {
 
     @Id
-    private Long id;
+    private String id;
     private String idUsuario;
     private String idReporte;
     private TipoNotificacion tipo;
-    private String mensaje;
+    private String contenido;
     private LocalDateTime fecha;
     private boolean leida;
 }

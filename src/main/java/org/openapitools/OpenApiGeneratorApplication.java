@@ -14,7 +14,6 @@ import org.springframework.context.annotation.FullyQualifiedAnnotationBeanNameGe
     basePackages = {"org.openapitools"},
     nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class
 )
-//@EnableConfigurationProperties(JwtProperties.class)
 @EnableConfigurationProperties(DefaultUserProperties.class)
 public class OpenApiGeneratorApplication {
 

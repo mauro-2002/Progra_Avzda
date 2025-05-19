@@ -98,6 +98,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     user.get().setCodigoRecuperacion("");
                     user.get().setPassword(resetPasswordRequest.newPassword());
                     userRepository.save(user.get());
+                    correosRecuperacion.remove(correo);
                     return Optional.of(new SuccessResponse("Password resetado correctamente"));
                 }
             }

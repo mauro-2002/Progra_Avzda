@@ -2,7 +2,6 @@ package org.openapitools.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.openapitools.dto.SuccessResponse;
 import org.openapitools.dto.UsuarioDTO.UsuarioRequest;
 import org.openapitools.dto.UsuarioDTO.UsuarioResponse;
 import org.openapitools.dto.UsuarioDTO.UsuarioUpdateRequest;
@@ -46,8 +45,8 @@ public class UsuarioController {
         }
     }
 
-    @DeleteMapping("/usuarios/{id}")
-    public ResponseEntity<SuccessResponse> deleteUsuario(@PathVariable String id) {
+    @PutMapping("/usuarios/{id}")
+    public ResponseEntity<UsuarioResponse> deleteUsuario(@PathVariable String id) {
         try{
             var response = usuarioService.deleteUsuario(id);
             return ResponseEntity.ok().body(response);

@@ -17,6 +17,9 @@ public interface UsuarioMapper {
     @Mapping(target = "notificaciones", ignore = true)
     @Mapping(target = "preferencias", ignore = true)
     @Mapping(target = "password" , expression = "java( new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode(userDTO.password()) )")
+    @Mapping(target = "codigoActivacion", ignore = true)
+    @Mapping(target = "expiracionCodigo", ignore = true)
+    @Mapping(target = "codigoRecuperacion", ignore = true)
     UsuarioStandar parseOf(UsuarioRequest userDTO);
 
 

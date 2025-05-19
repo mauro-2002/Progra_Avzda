@@ -3,7 +3,6 @@ package org.openapitools.services.implementations;
 import lombok.RequiredArgsConstructor;
 import org.openapitools.dto.UsuarioDTO.*;
 import org.openapitools.exceptions.UserAlreadyExists;
-import org.openapitools.dto.*;
 import org.openapitools.exceptions.UserNotFoundException;
 import org.openapitools.mappers.UsuarioMapper;
 import org.openapitools.model.Notificacion;
@@ -24,7 +23,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private static final SecureRandom random = new SecureRandom();
     private final UserRepository userRepository;
-    private final UsuarioMapper userMapper;
+    private final UsuarioMapper usuarioMapper;
     private final EmailService emailService;
 
     @Override
@@ -37,7 +36,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
         //creacion del usuario
 
-        usuario = userMapper.parseOf(usuarioRequest);
+        usuario = usuarioMapper.parseOf(usuarioRequest);
         String codigo = generarCodigo();
         usuario.setCodigoActivacion(codigo);
         usuario.setExpiracionCodigo(LocalDateTime.now().plusMinutes(15));
@@ -55,7 +54,7 @@ public class UsuarioServiceImpl implements UsuarioService {
                         "Tenga en cuenta que el codigo solo es valido durante 15 minutos"
         );
 
-        return userMapper.toUserResponse(usuario);
+        return usuarioMapper.toUserResponse(usuario);
     }
 
     @Override
@@ -71,18 +70,18 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setTelefono(usuarioUpdateRequest.newTelefono());
         userRepository.save(usuario);
 
-        return userMapper.toUserResponse(usuario);
+        return usuarioMapper.toUserResponse(usuario);
     }
 
     @Override
-    public SuccessResponse deleteUsuario(String id) {
+    public UsuarioResponse deleteUsuario(String id) {
         var usuario = findUsuarioByID(id);
         if (usuario == null){
             throw new UserNotFoundException("Usuario no encontrado");
         }
         usuario.setStatus(StatusUsuario.ELIMINADO);
         userRepository.save(usuario);
-        return new SuccessResponse("Usuario eliminado");
+        return usuarioMapper.toUserResponse(usuario);
     }
 
     @Override
@@ -91,7 +90,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         if (usuario == null){
             throw new UserNotFoundException("El usuario no existe");
         }
-        return userMapper.toUserResponse(usuario);
+        return usuarioMapper.toUserResponse(usuario);
     }
 
     @Override
