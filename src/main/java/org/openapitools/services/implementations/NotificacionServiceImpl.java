@@ -12,6 +12,8 @@ import org.openapitools.repositories.UserRepository;
 import org.openapitools.services.interfaces.NotificacionService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -35,17 +37,20 @@ public class NotificacionServiceImpl implements NotificacionService {
     }
 
     @Override
-    public Optional<NotificacionResponse> getNotificacion(NotificacionRequest notificacionRequest) {
+    public Optional<List<NotificacionResponse>> getNotificaciones(NotificacionRequest notificacionRequest) {
         var user = userRepository.findUserByID(notificacionRequest.idUsuario());
         if (user.isEmpty()) {
             throw new UserNotFoundException("No existe el usuario con el id: " + notificacionRequest.idUsuario());
         }
-
-        return Optional.empty();
+        List<NotificacionResponse> notificaciones = new ArrayList<>();
+        for (Notificacion notificacion : user.get().getNotificaciones()) {
+            notificaciones.add(notificacionMapper.toNotificacionResponse(notificacion));
+        }
+        return Optional.of(notificaciones);
     }
 
     @Override
-    public void markAsView(Long idNoti, String idUsuario) {
+    public void markAsView(String idNoti, String idUsuario) {
         var user = usuarioRepository.findUserByID(idUsuario);
         if (user.isEmpty()) {
             throw new UserNotFoundException("No existe el usuario con el id: " + idUsuario);
@@ -53,7 +58,7 @@ public class NotificacionServiceImpl implements NotificacionService {
         markNoti(user.get(), idNoti);
     }
 
-    private void markNoti (Usuario user, Long idNoti){
+    private void markNoti (Usuario user, String idNoti){
         for (Notificacion notificacion : user.getNotificaciones()) {
             if (notificacion.getId().equals(idNoti)) {
                 notificacion.setLeida(Boolean.TRUE);
