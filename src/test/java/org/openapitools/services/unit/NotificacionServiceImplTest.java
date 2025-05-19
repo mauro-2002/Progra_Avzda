@@ -14,9 +14,11 @@ import org.openapitools.model.Notificacion;
 import org.openapitools.model.UsuarioStandar;
 import org.openapitools.model.enums.Rol;
 import org.openapitools.model.enums.StatusUsuario;
+import org.openapitools.model.enums.TipoNotificacion;
 import org.openapitools.repositories.UserRepository;
 import org.openapitools.services.implementations.NotificacionServiceImpl;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,6 +53,16 @@ public class NotificacionServiceImplTest {
                 .telefono("1234567890")
                 .rol(Rol.STANDAR)
                 .status(StatusUsuario.ACTIVO).build();
+
+        notificacion = new Notificacion();
+        notificacion.setId(UUID.randomUUID().toString());
+        notificacion.setFecha(LocalDateTime.now());
+        notificacion.setIdUsuario(user.getId());
+        notificacion.setTipo(TipoNotificacion.COMENTARIO_NUEVO);
+        notificacion.setLeida(false);
+
+        notificacionRequest = new NotificacionRequest(notificacion.getIdUsuario(),notificacion.getIdReporte(),notificacion.getContenido(),notificacion.getTipo());
+        notificacionResponse = new NotificacionResponse(notificacion.getContenido(),notificacion.getFecha().toString(), false, notificacion.getTipo());
     }
 
     @Test
@@ -59,32 +71,41 @@ public class NotificacionServiceImplTest {
         when(userRepository.findUserByID(user.getId())).thenReturn(Optional.of(user));
 
         var result = notificacionServiceImpl.sendNotificacion(user.getId(), notificacionRequest);
+
         assertNotNull(result);
+
+        verify(notificacionMapper).parseToNotificacion(notificacionRequest);
+        verify(userRepository).findUserByID(user.getId());
     }
 
     @Test
     void testSendNotificacionFailure() {
         when(userRepository.findUserByID(user.getId())).thenReturn(Optional.empty());
+
         assertThrows(UserNotFoundException.class, () -> notificacionServiceImpl.sendNotificacion(user.getId(), notificacionRequest));
+
+        verify(notificacionMapper, never()).parseToNotificacion(notificacionRequest);
     }
 
     @Test
     void testGetNotificacionesSuccess() {
+        when(userRepository.findUserByID(user.getId())).thenReturn(Optional.of(user));
 
+        var result = notificacionServiceImpl.getNotificaciones(notificacionRequest);
+
+        assertNotNull(result);
+
+        verify(notificacionMapper).toNotificacionResponse(notificacion);
+        verify(userRepository).findUserByID(user.getId());
     }
 
     @Test
     void testGetNotificacionesFailure() {
+        when(userRepository.findUserByID(user.getId())).thenReturn(Optional.empty());
 
+        assertThrows(UserNotFoundException.class, () -> notificacionServiceImpl.getNotificaciones(notificacionRequest));
+
+        verify(notificacionMapper, never()).toNotificacionResponse(notificacion);
     }
 
-    @Test
-    void testMarkAsViewSuccess() {
-
-    }
-
-    @Test
-    void testMarkAsViewFailure() {
-
-    }
 }
